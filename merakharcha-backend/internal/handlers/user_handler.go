@@ -3,11 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/devlpr-nitish/merakharcha-backend/internal/db"
-	"github.com/devlpr-nitish/merakharcha-backend/internal/models"
+	"github.com/devlpr-nitish/merakharcha-backend/internal/services"
 	"github.com/devlpr-nitish/merakharcha-backend/internal/utils"
 	"github.com/labstack/echo/v4"
-	"golang.org/x/crypto/bcrypt"
 )
 
 
@@ -27,22 +25,14 @@ func Register(c echo.Context) error {
 	}
 
 	if req.Username == "" || req.Email == "" || req.Password == "" {
-		return utils.RespondError(c, http.StatusBadRequest, echo.NewHTTPError(http.StatusBadRequest, "Missing required field"), "username, email, and password are required")
+		return utils.RespondError(c, http.StatusBadRequest, echo.NewHTTPError(http.StatusBadRequest, "Missing required field"), "username, email, and password are required");
 	}
 
-
-	hashPassword , err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	user , err := services.RegisterUser(req.Username, req.Email, req.Password, req.Name);
 
 	if err != nil {
-		return utils.RespondError(c, http.StatusInternalServerError, err, "Failed to hash password")
+		return utils.RespondError(c, http.StatusInternalServerError, err, "Registration failed");
 	}
 
-	user := models.User{
-		Username: req.Username,
-		Email: req.Email,
-		Password: string(hashPassword),
-		Name: req.Name,
-	}
-
-
+	return utils.RespondSuccess(c, http.StatusCreated,"user registered successfully", user);
 }

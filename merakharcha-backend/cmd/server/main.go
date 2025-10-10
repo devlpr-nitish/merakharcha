@@ -9,19 +9,24 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func main() {
+	cfg := config.LoadConfig()
 
-
-
-func main(){
-	cfg := config.LoadCofig();
-
-	e := echo.New();
+	e := echo.New()
 
 	database := db.Connect(cfg)
 
-	defer database.Close();
+	// Close underlying *sql.DB when app exits
+	sqlDB, err := database.DB()
+	if err != nil {
+		log.Fatalf("Failed to get underlying sql.DB: %v", err)
+	}
 
-	routes.RegisterRoutes(e);
+	defer sqlDB.Close()
+
+	routes.HealthRoutes(e)
+	routes.AuthRoutes(e)
+	routes.UserRoutes(e)
 
 	log.Printf("Server is running on http://localhost:%s", cfg.AppPort)
 	e.Logger.Fatal(e.Start(":" + cfg.AppPort))

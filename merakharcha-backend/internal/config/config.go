@@ -15,7 +15,7 @@ type Config struct{
 	JWTSecret	string
 }
 
-func LoadCofig() *Config{
+func LoadConfig() *Config{
 	err := godotenv.Load();
 
 	if err != nil{
