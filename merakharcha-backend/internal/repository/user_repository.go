@@ -5,8 +5,6 @@ import (
 	"github.com/devlpr-nitish/merakharcha-backend/internal/models"
 )
 
-
-
 func CreateUser(user *models.User) error {
 
 	db := db.GetDB()
@@ -14,13 +12,24 @@ func CreateUser(user *models.User) error {
 	return db.Create(user).Error
 }
 
-func GetUserByEmail(email string)(*models.User, error){
+func GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 	db := db.GetDB()
-	
+
 	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil, err
 	}
 
 	return &user, nil
-} 
+}
+
+func GetUserByUsername(username string) (*models.User, error) {
+	var user models.User
+	db := db.GetDB()
+
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}

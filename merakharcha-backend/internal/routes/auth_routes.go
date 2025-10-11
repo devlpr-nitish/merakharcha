@@ -18,6 +18,7 @@ func AuthRoutes(e *echo.Echo){
 	authGroup := e.Group("/auth");
 
 	authGroup.POST("/register", handlers.Register);
+	authGroup.POST("/login", handlers.Login)
 }
 
 
