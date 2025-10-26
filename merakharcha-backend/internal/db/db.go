@@ -24,7 +24,7 @@ func Connect(cfg *config.Config) *gorm.DB {
 		log.Fatalf("Failed to open DB connection: %v", err)
 	}
 
-	err = db.AutoMigrate(&models.User{}); 
+	err = db.AutoMigrate(&models.User{}, &models.Group{}, &models.Expense{}, &models.ExpenseParticipant{}); 
 
 	if err != nil {
 		log.Fatalf("Failed to migrate models: %v", err)
