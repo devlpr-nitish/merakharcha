@@ -28,6 +28,7 @@ func main() {
 	routes.AuthRoutes(e)
 	routes.UserRoutes(e)
 	routes.ExpenseRoutes(e)
+	routes.GroupRoutes(e)
 
 	log.Printf("Server is running on http://localhost:%s", cfg.AppPort)
 	e.Logger.Fatal(e.Start(":" + cfg.AppPort))
