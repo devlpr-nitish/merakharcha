@@ -97,7 +97,7 @@ export default function LoginForm() {
     return (
         <div className="flex items-center justify-center p-6 lg:p-12">
             <div className="w-full max-w-md">
-                {/* Header */}
+                
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-foreground mb-2">Welcome Back</h1>
                     <p className="text-muted-foreground">Log in to your Merakharcha account</p>
@@ -106,7 +106,7 @@ export default function LoginForm() {
                 {/* Form Card */}
                 <Card className="p-6 border border-border">
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        {/* Username or Email Field */}
+                        
                         <div className="space-y-2">
                             <Label htmlFor="usernameOrEmail" className="text-sm font-medium text-foreground">
                                 Username or Email
@@ -126,7 +126,7 @@ export default function LoginForm() {
                             )}
                         </div>
 
-                        {/* Password Field */}
+                        
                         <div className="space-y-2">
                             <Label htmlFor="password" className="text-sm font-medium text-foreground">
                                 Password
@@ -146,14 +146,14 @@ export default function LoginForm() {
                             )}
                         </div>
 
-                        {/* Forgot Password Link */}
+                        
                         <div className="text-right">
                             <Link href="#" className="text-sm text-primary hover:underline font-semibold">
                                 Forgot password?
                             </Link>
                         </div>
 
-                        {/* Submit Button */}
+                        
                         <Button
                             type="submit"
                             className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
@@ -163,10 +163,10 @@ export default function LoginForm() {
                         </Button>
                     </form>
 
-                    {/* Register Link */}
+                    
                     <div className="mt-6 text-center">
                         <p className="text-sm text-muted-foreground">
-                            Don't have an account?{' '}
+                            Don&apos;t have an account?{' '}
                             <Link href="/register" className="text-primary hover:underline font-semibold">
                                 Create one
                             </Link>
