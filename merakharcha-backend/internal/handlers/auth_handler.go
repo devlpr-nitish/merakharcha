@@ -47,7 +47,7 @@ func Login(c echo.Context) error {
 	}
 
 	if req.Identifier == "" || req.Password == "" {
-		return utils.RespondError(c, http.StatusBadRequest, echo.NewHTTPError(http.StatusBadRequest, "Missing required field"), "username or email and password are required")
+		return utils.RespondError(c, http.StatusBadRequest, echo.NewHTTPError(http.StatusBadRequest, "Missing required field"), "username / email and password are required")
 	}
 
 	token, err := services.LoginUser(req.Identifier, req.Password)
