@@ -3,19 +3,46 @@
 import { Plus, Trash2, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useFriendService } from "@/services/friendService"
 
 export default function FriendsPage() {
   const [showAddFriend, setShowAddFriend] = useState(false)
-  const [friends, setFriends] = useState([
-    { id: 1, name: "John Doe", phone: "+91-9876543210", balance: "You owe ₹450" },
-    { id: 2, name: "Sarah Smith", phone: "+91-9876543211", balance: "You are owed ₹200" },
-    { id: 3, name: "Mike Johnson", phone: "+91-9876543212", balance: "Settled" },
-    { id: 4, name: "Emma Wilson", phone: "+91-9876543213", balance: "You owe ₹1200" },
-  ])
+  const [friendInput, setFriendInput] = useState({ name: "", phone: "" })
+  const [friends, setFriends] = useState([])
 
-  const removeFriend = (id: number) => {
-    setFriends(friends.filter((f) => f.id !== id))
+  const { getFriends, addFriend: addFriendApi, removeFriend: removeFriendApi } =
+    useFriendService()
+
+  
+  useEffect(() => {
+    fetchFriends()
+  }, []);
+
+  const fetchFriends = async () => {
+    const { ok, data } = await getFriends()
+    if (ok) setFriends(data || [])
+  }
+
+  const addFriend = async () => {
+    if (!friendInput.id) return
+
+    const { ok, data } = await addFriendApi({
+      other_user: friendInput.id,
+    })
+
+    if (ok) {
+      setFriends((prev) => [...prev, data])
+      setFriendInput({ id: 0, name: "", phone: "" })
+      setShowAddFriend(false)
+    }
+  }
+
+  const removeFriend = async (other_user: number) => {
+    const { ok } = await removeFriendApi(other_user)
+    if (ok) {
+      setFriends((prev) => prev.filter((f) => f.id !== other_user))
+    }
   }
 
   return (
@@ -41,16 +68,39 @@ export default function FriendsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                {/* name */}
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter friend's name"
+                    value={friendInput.name}
+                    onChange={(e) => setFriendInput({ ...friendInput, name: e.target.value })}
+                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
+                  />
+                </div>
+
+                {/* phone */}
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Email or Phone</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Enter email or phone number"
-                      className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
-                    />
-                    <Button>Add</Button>
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Enter email or phone number"
+                    value={friendInput.phone}
+                    onChange={(e) => setFriendInput({ ...friendInput, phone: e.target.value })}
+                    onKeyDown={(e) => e.key === "Enter" && addFriend()}
+                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
+                  />
+                </div>
+
+                {/* buttons */}
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => setShowAddFriend(false)} className="flex-1">
+                    Cancel
+                  </Button>
+                  <Button onClick={addFriend} className="flex-1">
+                    Add Friend
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -59,7 +109,7 @@ export default function FriendsPage() {
 
         {/* Friends List */}
         <div className="grid gap-4">
-          {friends.map((friend) => (
+          {friends.map((friend: any) => (
             <Card key={friend.id} className="hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
@@ -67,15 +117,14 @@ export default function FriendsPage() {
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                       <User className="w-6 h-6 text-primary" />
                     </div>
+
                     <div className="flex-1">
                       <p className="font-semibold text-foreground">{friend.name}</p>
                       <p className="text-sm text-muted-foreground">{friend.phone}</p>
                     </div>
                   </div>
+
                   <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <p className="font-semibold text-foreground">{friend.balance}</p>
-                    </div>
                     <Button
                       variant="outline"
                       size="sm"
